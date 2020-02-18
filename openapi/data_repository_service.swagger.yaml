@@ -21,7 +21,7 @@ security:
   - {}
   - authToken: []
 paths:
-  '/objects/{schema}{identifier}/{object_id}':
+  '/objects/{scheme}{identifier}/{object_id}':
     get:
       summary: Get info about a `DrsObject`.
       description: >-
@@ -68,10 +68,13 @@ paths:
           schema:
             $ref: '#/definitions/Error'
       parameters:
-        - name: schema
+        - name: scheme
           in: path
           required: false
           type: string
+          enum: |-
+          - ark:
+          - dg.
           description: A string of characters the define which resolution service is used for object resolution (i.e. "dg." or "ark:")
         - name: identifier
           in: path
@@ -101,7 +104,7 @@ paths:
       tags:
         - DataRepositoryService
       x-swagger-router-controller: ga4gh.drs.server
-  '/objects/{schema}{identifier}/{object_id}/access/{access_id}':
+  '/objects/{scheme}{identifier}/{object_id}/access/{access_id}':
     get:
       summary: Get a URL for fetching bytes.
       description: >-
@@ -157,16 +160,19 @@ paths:
           required: true
           type: string
           description: An `id` of a `DrsObject`
-        - name: schema
+        - name: scheme
           in: path
           required: false
           type: string
+          enum: |-
+            ark:
+            dg.
           description: A string of characters the define which resolution service is used for object resolution (i.e. "dg." or "ark:")
         - name: identifier
           in: path
           required: false
           type: string
-          description: A string of characters after the schema that is a unique identifer of the organization that the object belongs to
+          description: A dataguids identifier in the format of dg.XXXX that is used for resolution of object ids
         - name: access_id
           in: path
           required: true

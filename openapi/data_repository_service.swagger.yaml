@@ -73,8 +73,8 @@ paths:
           required: false
           type: string
           enum: |-
-          - ark:
-          - dg.
+            ark:
+            dg.
           description: A string of characters the define which resolution service is used for object resolution (i.e. "dg." or "ark:")
         - name: identifier
           in: path

@@ -11,14 +11,20 @@ The primary functionality of DRS is to map a logical ID to a means for physicall
 Each implementation of DRS can choose its own id scheme, as long as it follows these guidelines:
 
 * DRS IDs are strings made up of uppercase and lowercase letters, decimal digits, hypen, period, underscore and tilde [A-Za-z0-9.-_~]. See https://tools.ietf.org/html/rfc3986#section-2.3[RFC 3986 § 2.3].
-* Note to server implementors: internal IDs can contain other characters, but they MUST be encoded into valid DRS IDs whenever exposed by the API.   
+* Note to server implementors: internal IDs can contain other characters, but they MUST be encoded into valid DRS IDs whenever exposed by the API.
 * One DRS ID MUST always return the same object data (or, in the case of a collection, the same set of objects). This constraint aids with reproducibility.
 * DRS v1 does NOT support semantics around multiple versions of an object. (For example, there’s no notion of “get latest version” or “list all versions”.) Individual implementation MAY choose an ID scheme that includes version hints.
 * DRS implementations MAY have more than one ID that maps to the same object.
 
+=== DRS Prefixes
+
+Each implementation of DRS can choose a persistent identifier to resolve DRS objects persistently if needed. We support Archival Resource Keys `ark` and dataguids `dg` at the moment. See https://n2t.net/e/ark_ids.html or https://dataguids.org/. These are represented first with a schema `ark:` for Archival Resource Keys and `dg.` for dataguids. Secondly there is an identifier that your DRS implementation uses. This is a unique string assigned by a resolution service like https://nt2.net or https://dataguids.org/. Once assigned it is shared with other resolvers so that they can resolve the prefixes as well.
+
+It is important to understand that prefixes are immutable. Once a prefix is assigned to an organization/DRS implementation it won't change. However, the host that this prefix points to can be updated.
+
 === DRS URIs
 
-For convenience, including when passing content references to a WES server, we define a URI syntax for DRS-accessible content. Strings of the form `drs://<server>/<id>` mean _“you can fetch the content with DRS id `<id>` from the DRS server at `<server>` "_.
+For convenience, including when passing content references to a WES server, we define a URI syntax for DRS-accessible content. Strings of the form `drs://<server>/<id>` or `drs://<server>/<scheme><identifier>/<id>` mean _“you can fetch the content with DRS id `<id>` from the DRS server at `<server>` with prefix <scheme><identifier> if provided "_.
 
 For example, if a WES server was asked to process `drs://drs.example.org/314159`, it would know that it could issue a GET request to `https://drs.example.org/ga4gh/drs/v1/objects/314159` to learn how to fetch that object.
 
@@ -41,7 +47,7 @@ The DRS API specification is written in OpenAPI and embodies a RESTful service p
 
 === Making DRS Requests
 
-The DRS implementation is responsible for defining and enforcing an authorization policy that determines which users are allowed to make which requests. GA4GH recommends that DRS implementations use an OAuth 2.0 https://oauth.net/2/bearer-tokens/[bearer token], although they can choose other mechanisms if appropriate. 
+The DRS implementation is responsible for defining and enforcing an authorization policy that determines which users are allowed to make which requests. GA4GH recommends that DRS implementations use an OAuth 2.0 https://oauth.net/2/bearer-tokens/[bearer token], although they can choose other mechanisms if appropriate.
 
 === Fetching DRS Objects
 
@@ -63,3 +69,9 @@ The DRS API allows implementers to support a variety of different content access
 ** caller fetches the object bytes from the `url` (passing auth info from the specified headers, if any)
 
 DRS implementers should ensure their solutions restrict access to targets as much as possible, detect attempts to exploit through log monitoring, and they are prepared to take action if an exploit in their DRS implementation is detected.
+
+=== DRS Resolution
+
+When making DRS requests if a 404 is encountered we are able to use the DRS prefix to resolve the identifiers. We can use a resolution service like http://n2t.net/[n2t], http://identifiers.org/[identifiers.org], or https://dataguids.org/[dataguids] (for `dg.`) to resolve our prefixes. This will give us a HTTP 302 response with the redirect to the new URL associated with the DRS implementation. This new URL can then be cached to be used for subsequent DRS requests.
+
+There is no need to pass any authorization headers to the resolution service

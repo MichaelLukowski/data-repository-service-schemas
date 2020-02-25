@@ -75,6 +75,6 @@ DRS implementers should ensure their solutions restrict access to targets as muc
 
 === DRS Resolution
 
-When making DRS requests if a 404 is encountered we are able to use the DRS prefix to resolve the identifiers. DRS implementors can use a resolution service like http://n2t.net/[n2t], http://identifiers.org/[identifiers.org], or https://dataguids.org/[dataguids] (for `dg.`) to resolve prefixes. This request will give a HTTP 302 response with the redirect to the new URL associated with the DRS implementation. This new URL can then be cached to be used for subsequent DRS requests.
+When making DRS requests if a 404 is encountered, clients CAN use the DRS prefix to resolve the identifiers. DRS implementors can use a resolution service like http://n2t.net/[n2t], http://identifiers.org/[identifiers.org], or https://dataguids.org/[dataguids] (for `dg.`) to resolve prefixes. This request will give a HTTP 302 response with the redirect to the new URL associated with the DRS implementation. This new URL can then be cached to be used for subsequent DRS requests.
 
 There is no need to pass any authorization headers to the resolution service

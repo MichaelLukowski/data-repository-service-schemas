@@ -80,7 +80,7 @@ paths:
           in: path
           required: false
           type: string
-          description: A string of characters after the schema that is a unique identifer of the organization that the object belongs to
+          description: A string of characters after the scheme that is a unique identifer of the organization that the object belongs to
         - name: object_id
           in: path
           required: true
@@ -172,7 +172,7 @@ paths:
           in: path
           required: false
           type: string
-          description: A dataguids identifier in the format of dg.XXXX that is used for resolution of object ids
+          description: A string of characters after the scheme that is a unique identifer of the organization that the object belongs to
         - name: access_id
           in: path
           required: true

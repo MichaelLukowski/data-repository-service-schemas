@@ -18,7 +18,10 @@ Each implementation of DRS can choose its own id scheme, as long as it follows t
 
 === DRS Prefixes
 
-Each implementation of DRS can choose a persistent identifier to resolve DRS objects persistently if needed. We support Archival Resource Keys `ark` and dataguids `dg` at the moment. See https://n2t.net/e/ark_ids.html or https://dataguids.org/. These are represented first with a schema `ark:` for Archival Resource Keys and `dg.` for dataguids. Secondly there is an identifier that your DRS implementation uses. This is a unique string assigned by a resolution service like https://nt2.net or https://dataguids.org/. Once assigned it is shared with other resolvers so that they can resolve the prefixes as well.
+Each implementation of DRS MAY use a persistent identifier to support long term access to objects. The persistent identifier MUST include a component that does not change, known as the prefix. A prefix has a scheme and an identifier. The scheme denotes the resolution service such as `ark:` for [Archival Resource Keys](https://n2t.net/e/ark_ids.html) or `dg` for [dataguids](https://dataguids.org/)
+The identifier of the prefix is a unique string assigned by the resolution service. Once assigned, it CAN be shared with other resolvers so they can resolve the prefixes as well.
+
+Example prefix {scheme}{identifier} dg.1234
 
 It is important to understand that prefixes are immutable. Once a prefix is assigned to an organization/DRS implementation it won't change. However, the host that this prefix points to can be updated.
 
@@ -72,6 +75,6 @@ DRS implementers should ensure their solutions restrict access to targets as muc
 
 === DRS Resolution
 
-When making DRS requests if a 404 is encountered we are able to use the DRS prefix to resolve the identifiers. We can use a resolution service like http://n2t.net/[n2t], http://identifiers.org/[identifiers.org], or https://dataguids.org/[dataguids] (for `dg.`) to resolve our prefixes. This will give us a HTTP 302 response with the redirect to the new URL associated with the DRS implementation. This new URL can then be cached to be used for subsequent DRS requests.
+When making DRS requests if a 404 is encountered we are able to use the DRS prefix to resolve the identifiers. DRS implementors can use a resolution service like http://n2t.net/[n2t], http://identifiers.org/[identifiers.org], or https://dataguids.org/[dataguids] (for `dg.`) to resolve prefixes. This request will give a HTTP 302 response with the redirect to the new URL associated with the DRS implementation. This new URL can then be cached to be used for subsequent DRS requests.
 
 There is no need to pass any authorization headers to the resolution service
